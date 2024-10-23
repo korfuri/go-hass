@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
 )
@@ -66,6 +67,7 @@ func genericGet[T any](hc *HassClient, path string) (T, error) {
 	}
 	var r T
 	if err := json.Unmarshal(resp, &r); err != nil {
+		slog.Debug("Failed to unmarshal JSON object", err.Error(), resp)
 		return *new(T), err
 	}
 	return r, nil

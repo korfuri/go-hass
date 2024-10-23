@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 
 	ghs "github.com/korfuri/go-hass/pkg/gohassapi"
 )
 
 func main() {
+	slog.SetLogLoggerLevel(slog.LevelDebug)
 	hc := ghs.NewClient("https://hass.korfuri.fr/api/", os.Getenv("HASS_TOKEN"))
 	status, err := hc.Check()
 	if err != nil {
