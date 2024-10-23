@@ -67,7 +67,7 @@ func TestGetCalls(t *testing.T) {
     }
 ]`,
 			httpStatusCode: 200,
-			expectedResponse: []ghs.ApiState{
+			expectedResponse: []ghs.State{
 				{
 					Attributes: make(map[string]any),
 					EntityId: "sun.sun",
@@ -79,6 +79,39 @@ func TestGetCalls(t *testing.T) {
 					EntityId: "process.Dropbox",
 					LastChanged: timeMustParse(t, "2016-05-30T21:43:32.418320+00:00"),
 					State: "on",
+				},
+			},
+		},
+		{
+			name: "Services",
+			caller: func(_ *testing.T, hc *ghs.HassClient) (any, error) {
+				return hc.Services()
+			},
+			// TODO: Services should have a 'fields' field
+			// but this is not well-documented in the API
+			// reference, see:
+			// https://github.com/home-assistant/developers.home-assistant/issues/2419
+			httpResponse: `[
+    {
+        "domain": "test_domain",
+        "services": {
+           "test1": {
+              "name": "test1",
+              "description": "This is a test service"
+            }
+        }
+    }
+]`,
+			httpStatusCode: 200,
+			expectedResponse: []ghs.ServiceDomain{
+				{
+					Domain: "test_domain",
+					Services: map[string]ghs.Service{
+						"test1": {
+							Name: "test1",
+							Description: "This is a test service",
+						},
+					},
 				},
 			},
 		},

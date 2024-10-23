@@ -10,7 +10,7 @@ import (
 
 type HassClient struct {
 	Endpoint string
-	Token string
+	Token    string
 
 	client *http.Client
 }
@@ -18,8 +18,8 @@ type HassClient struct {
 func NewClient(endpoint string, token string) *HassClient {
 	return &HassClient{
 		Endpoint: endpoint,
-		Token: token,
-		client: &http.Client{},
+		Token:    token,
+		client:   &http.Client{},
 	}
 }
 
@@ -75,14 +75,19 @@ func genericGet[T any](hc *HassClient, path string) (T, error) {
 // Queries the /api/ endpoint and reports if the API is up and
 // running.
 func (hc *HassClient) Check() (string, error) {
-	ac, err := genericGet[apiCheck](hc, "/")
+	ac, err := genericGet[Check](hc, "/")
 	if err != nil {
 		return "", err
 	}
 	return ac.Message, nil
 }
 
-// Queries the /states/ endpoint and returns a list of entities with their associated states
-func (hc *HassClient) States() ([]ApiState, error) {
-	return genericGet[[]ApiState](hc, "/states")
+// Queries the /states endpoint and returns a list of entities with their associated states
+func (hc *HassClient) States() ([]State, error) {
+	return genericGet[[]State](hc, "/states")
+}
+
+// Queries the /services endpoint and returns a list of service objects.
+func (hc *HassClient) Services() ([]ServiceDomain, error) {
+	return genericGet[[]ServiceDomain](hc, "/services")
 }

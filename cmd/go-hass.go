@@ -23,4 +23,16 @@ func main() {
 	for _, s := range states {
 		fmt.Printf("State: %s is %s since %v.\n", s.EntityId, s.State, s.LastChanged)
 	}
+	services, err := hc.Services()
+	if err != nil {
+		fmt.Printf("API error while fetching services: %v\n", err)
+		os.Exit(1)
+	}
+	for _, sd := range services {
+		fmt.Printf("Domain: %s, services:", sd.Domain)
+		for _, s := range sd.Services {
+			fmt.Printf(" [%s]", s.Name)
+		}
+		fmt.Printf("\n")
+	}
 }
